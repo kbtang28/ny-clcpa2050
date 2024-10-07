@@ -8,3 +8,6 @@ Baseline_v4/
 matpower7.1/
 
 yalmip/
+
+osqp/
+install_osqp.m
