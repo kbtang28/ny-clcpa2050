@@ -5,7 +5,7 @@
 dayofqm = readtable('Data/qm_to_numdays.csv');
 nhours = dayofqm.Days*24;
 allobj = [];
-for scenario = 1
+for scenario = 6
     result = zeros(22,5);
     for year = 1998:2019
     %     result = zeros(nsamples,15);
@@ -45,7 +45,7 @@ for scenario = 1
         sc = readmatrix('Baseline_v4/Scenario'+string(scenario)+'/sc_'+string(year)+'.csv');
         battstate = readmatrix('Baseline_v4/Scenario'+string(scenario)+'/battstate_'+string(year)+'.csv');
         ls = readmatrix('Baseline_v4/Scenario'+string(scenario)+'/loadshed_'+string(year)+'.csv');
-        tempchange = readtable('Load/temperature.changes.csv');
+        tempchange = readtable('Data/temperature.changes.csv');
 %           normal result calculation   
         loadshedsum = sum(sum(ls(4:49,:)));
         tsls = sum(ls(4:49,:));

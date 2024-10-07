@@ -1,14 +1,14 @@
 addpath('/opt/ohpc/pub/apps/gurobi/9.5.1/matlab')
 addpath(genpath([pwd filesep 'yalmip']));
-addpath(genpath([pwd filesep 'matpower']));
+addpath(genpath([pwd filesep 'matpower7.1']));
 %winter week 2015 dd = 53
 % week of summer downstate analysis year 1999, dd = 205, one week
 % week of winter downstate analysis year 1999, dd = 0, one week
 % net vs no net year = 2011, dd = 20
-for year = 1997+3
+for year = 1997+2
 %     for scenario = [47,52,107,90,158,134,87,82,20,99,27,23,54,157,55,108,111,132,155,94]
-    for lhscenario = 1
-        dd = 21;
+    for lhscenario = 6
+        dd = 0;
         starttime = 1;
         scenario = 0;
         bd_rateAE= 0.92;
@@ -30,7 +30,7 @@ for year = 1997+3
         battstate = readmatrix('Baseline_v4/Scenario'+string(lhscenario)+'/battstate_'+string(year)+'.csv');
         ls = readmatrix('Baseline_v4/Scenario'+string(lhscenario)+'/loadshed_'+string(year)+'.csv');
 
-        newload = readmatrix('Load/AllSimload/Scenario'+string(scenario)+'/simload_'+string(year)+'.csv');
+        newload = readmatrix('Data/Load/AllBaseload/Scenario'+string(scenario)+'/simload_'+string(year)+'.csv');
 %         iflimup = readmatrix('Data/Iflim/iflimup_'+string(year)+'_'+string(scenario)+'.csv');
 %         iflimdn = readmatrix('Data/Iflim/iflimdn_'+string(year)+'_'+string(scenario)+'.csv');
         Naghydro = readtable('Data/hydrodata/nypaNiagaraEnergy.climate.change.csv');
@@ -47,14 +47,14 @@ for year = 1997+3
         mshy = Mshydro(Mshydro.Year == year,colname2);
         mshy = table2array(mshy);
         smallhydro = readmatrix('Data/hydrodata/smallhydrogen.csv');
-        EVload = readmatrix('Load/EVload/EVload_Bus.csv');
+        EVload = readmatrix('Data/Load/EVload/EVload_Bus.csv');
         EVloadbusid = EVload(:,1);
-        ResLoad = readmatrix('Load/ResLoad/Scenario'+string(scenario)+'/ResLoad_Bus_'+string(year)+'.csv');
-        ComLoad = readmatrix('Load/ComLoad/Scenario'+string(scenario)+'/ComLoad_Bus_'+string(year)+'.csv');
+        ResLoad = readmatrix('Data/Load/ResLoad/Scenario'+string(scenario)+'/ResLoad_Bus_'+string(year)+'.csv');
+        ComLoad = readmatrix('Data/Load/ComLoad/Scenario'+string(scenario)+'/ComLoad_Bus_'+string(year)+'.csv');
 
-        SolarUPV = readmatrix('RenewableGen/Solar/SolarFinal/Scenario'+string(scenario)+'/solarUPV'+string(year)+'_0.csv');
-        SolarDPV = readmatrix('RenewableGen/Solar/SolarFinal/Scenario'+string(scenario)+'/solarDPV'+string(year)+'_0.csv');
-        Wind = readmatrix('RenewableGen/Wind/WindFinal/Wind'+string(year)+'.csv');
+        SolarUPV = readmatrix('Data/RenewableGen/Solar/SolarFinal/Scenario'+string(scenario)+'/solarUPV'+string(year)+'_0.csv');
+        SolarDPV = readmatrix('Data/RenewableGen/Solar/SolarFinal/Scenario'+string(scenario)+'/solarDPV'+string(year)+'_0.csv');
+        Wind = readmatrix('Data/RenewableGen/Wind/WindFinal/Wind'+string(year)+'.csv');
         SolarUPV = round(SolarUPV,2);
         SolarDPV = round(SolarDPV,2);
         Wind = round(Wind,2);
@@ -129,7 +129,7 @@ for year = 1997+3
             smallhydrobusid(i) = find(mpcreduced.bus(:,1) == smallhydrobusid(i));
         end
         
-        load('businfo.mat')
+        load('Data/businfo.mat')
 
         Buildingidx = ComLoad(:,1);
         for i = 1:length(EVloadbusid)
@@ -139,6 +139,9 @@ for year = 1997+3
             Buildingidx(i) = find(mpcreduced.bus(:,1) == Buildingidx(i));
         end
 
+        AE = [54 55 56 57 58 59 60 61 62 52 53 50 51 63 64 65 66 67 68 70 71 72 48 49 69 38 43 44 45 46 47];
+        FI = [40 41 42 37 39 73 75 76 77 74 78];
+        JK = [82 81 79 80];
         AEev = [];
         AEbd = [];
         FIev = [];
@@ -327,14 +330,14 @@ for year = 1997+3
         linkaxes([ax1,ax2],'x')
         set(gcf, 'Position', [618,404,1559,770]);
         % Save the plot as a PNG image
-%         print(gcf, '-dpng', 'Baseline_v4/Figures/annualcase'+string(year)+'_'+string(lhscenario)+'.png');
-%         close(1)
+        print(gcf, '-dpng', 'Baseline_v4/Figures/annualcase'+string(year)+'_'+string(lhscenario)+'.png');
+        close(1)
         %% figure daily
 
 
         
         starttime = 1+dd*24;
-        nt=5*24;
+        nt=7*24;
         
         
         
@@ -373,8 +376,8 @@ for year = 1997+3
         linkaxes([ax1,ax2],'x')
         set(gcf, 'Position', [618,404,1559,770]);
         % Save the plot as a PNG image
-%         print(gcf, '-dpng', 'Baseline_v4/Figures/dailycase'+string(year)+'_'+string(lhscenario)+'.png');
-%         close(2)
+        print(gcf, '-dpng', 'Baseline_v4/Figures/dailycase'+string(year)+'_'+string(lhscenario)+'.png');
+        close(2)
         %% loadshed 
         loadshedsum = sum(sum(ls(4:49,:)))
         tsls = sum(ls(4:49,:));
@@ -568,9 +571,9 @@ for year = 1997+3
             ax = gca;
             ax.FontSize = 16; 
             set(gcf, 'Position', [347,1,1457,1271]);
-%             print(gcf, '-dpng', 'Baseline_v4/Figures/zonalls'+string(year)+'_'+string(lhscenario)+'.png');
+            print(gcf, '-dpng', 'Baseline_v4/Figures/zonalls'+string(year)+'_'+string(lhscenario)+'.png');
 %             
-%         close(3)
+        close(3)
         batt = charge.*disch;
         battall = sum(sum(batt))
     end
