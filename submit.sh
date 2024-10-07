@@ -6,7 +6,6 @@
 #SBATCH --error=slurm/err-%j.txt
 #SBATCH --mail-user=kbt28@cornell.edu
 #SBATCH --mail-type=END
-#SBATCH --exclusive
 
 # print properties of job as submitted
 echo "SLURM_JOB_ID = $SLURM_JOB_ID"
