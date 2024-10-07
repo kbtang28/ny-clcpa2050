@@ -11,3 +11,5 @@ yalmip/
 
 osqp/
 install_osqp.m
+
+slurm/
